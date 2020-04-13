@@ -2,8 +2,246 @@
     <head>
         <title>aha Insurance</title>
         <link href="style.css" rel="stylesheet" type ="text/css">
+	    <script type='text/javascript' src='https://c.la2-c1cs-dfw.salesforceliveagent.com/content/g/js/48.0/deployment.js'></script>
+
+  <script>
+
+    var day = new Date().getDay();
+    var hour = new Date().getHours();
+    var min = new Date().getMinutes();
+
+    var isWeekend = (day === 6) || (day === 0); 
+    var isWorkingHours = (hour >= 8) && (hour < 17);
+    var isEightFlag = true ;
+    if(min <= 29 && hour == 8){
+        isEightFlag = false;
+    }
+    //var tryCount = 0;
+    //var counterLimit = 100;
+
+    //function checkDocumentReady() {
+     //  if (document.readyState !== "complete") {
+    //        this.tryCount++;
+     //       if (this.tryCount <= this.counterLimit) {
+     //           setTimeout(checkDocumentReady, 100);
+    //        }
+    //    } else {
+    //        onLoadLiveAgent(); 
+    //    }
+   // }
+
+   function checkDocumentReady(){
+    if(document.readyState === "complete"){
+        loadPageScript();
+    }
+    else{
+        setTimeout(checkDocumentReady, 100);
+        }
+    }
+    
+    checkDocumentReady();
+
+    function buttonCallback(e) {
+        if (e == liveagent.BUTTON_EVENT.BUTTON_AVAILABLE) {
+            document.getElementById('liveagent_invite_button_5734C00000000Cg').style.display 
+            = '';
+            document.getElementById('liveagent_invite_button_5734C00000000Cg').style.left = 
+                '300px';
+            document.getElementById('liveagent_invite_button_5734C00000000Cg').style.top = 
+                '200px';
+        }
+        if (e == liveagent.BUTTON_EVENT.BUTTON_UNAVAILABLE) {
+            document.getElementById('liveagent_invite_button_5734C00000000Cg').style.display =
+                'none';
+        }
+        if (e == liveagent.BUTTON_EVENT.BUTTON_ACCEPTED) {
+            document.getElementById('liveagent_invite_button_5734C00000000Cg').style.display =
+                'none';
+        }
+        if (e == liveagent.BUTTON_EVENT.BUTTON_REJECTED) {
+            document.getElementById('liveagent_invite_button_5734C00000000Cg').style.display =
+                'none';
+        }
+    }
+
+    function loadPageScript() {
+        if(isWorkingHours && !isWeekend && isEightFlag){
+            document.getElementsByClassName('aha-online')[0].className = "aha-online";
+            document.getElementsByClassName('aha-offline')[0].className = "aha-offline hide";
+            liveagent.init('https://d.la2-c1cs-dfw.salesforceliveagent.com/chat', '57236000000PYSV', '00D4C0000008ai7');
+            liveagent.addButtonEventHandler('5734C00000000Cg', buttonCallback);
+
+            
+            //Calling my respective liveagent with the chat link and button ID per env
+            checkSalesforceAuthChatLinkByEnv(envName);
+            
+                window.name = "liveChatWindow";
+                if (window.userInfo) {
+                    if (window.userInfo.policyNumber)
+                        liveagent.addCustomDetail('Policy Number', window.userInfo.policyNumber);
+                    if (window.userInfo.firstName)
+                        liveagent.addCustomDetail('First Name', window.userInfo.firstName);
+                    if (window.userInfo.lastName)
+                        liveagent.addCustomDetail('Last Name', window.userInfo.lastName);
+                    if (window.userInfo.email)
+                        liveagent.addCustomDetail('Contact E-mail', window.userInfo.email);
+                    if (window.userInfo.phone)
+                        liveagent.addCustomDetail('Phone Number', window.userInfo.phone);
+                    if (window.userInfo.firstName && window.userInfo.lastName)
+                        liveagent.setName(window.userInfo.firstName+' '+window.userInfo.lastName);
+                }
+
+                /* Sets the display name of the visitor in the agent console when engaged in a chat */
+                /* liveagent.setName('Amy Schoeff'); */
+
+                /* Creates a custom detail called First Name and sets the value to Jane */
+                /* liveagent.addCustomDetail('First Name', 'Amy'); */
+
+                /* Creates a custom detail called Last Name and sets the value to Doe */
+                /* liveagent.addCustomDetail('Last Name', 'Schoeff'); */
+
+                /* Adds a custom detail called Contact Email and sets it value to jane@doe.com */
+                /* liveagent.addCustomDetail('Contact E-mail', 'aschoeff@uat.test.com'); */
+
+                /* Creates a custom detail called Phone Number and sets the value to 415-555-1212 */
+                /* liveagent.addCustomDetail('Phone Number', '416-555-2020'); */
+
+                /* An auto-query that searches Contacts whose Email field exactly matches 'jane@doe.com'. If no result is found, it will create a Contact record with the email, first name, last name, and phone number fields set to the custom detail values. */
+                liveagent.findOrCreate('Contact').map('Email','Contact E-mail',true,true,true).map('FirstName','First Name',false,false,true).map('LastName','Last Name',false,false,true).map('Phone','Phone Number',false,false,true).map('PolicyNumber','Policy Number',false,false,true);
+
+                /* The contact that's found or created will be saved or associated to the chat transcript. The contact will be opened for the agent in the Console and the case is linked to the contact record */
+                liveagent.findOrCreate('Contact').saveToTranscript('ContactId').showOnCreate().linkToEntity('Case','ContactId');
+
+                /* Creates a custom detail called Case Subject and sets the value to 'Refund policy for products' and will perform a knowledge search when the chat is accepted for the agent */
+                //liveagent.addCustomDetail('Case Subject','Refund policy for products').doKnowledgeSearch();
+
+                /* Creates a custom detail called Case Status and sets the value to 'New' */
+                //liveagent.addCustomDetail('Case Status','New');
+
+                /* This does a non-exact search on cases by the value of the 'Case Subject' custom detail If no results are found, it will create a case and set the case's subject and status.
+                The case that's found or created will be associated to the chat and the case will open in the Console for the agent when the chat is accepted */
+                //liveagent.findOrCreate('Case').map('Subject','Case Subject',true,false,true).map('Status','Case Status',false,false,true).saveToTranscript('CaseId').showOnCreate();
+
+                if (!window._laq) {
+                    window._laq = [];
+                }
+                window._laq.push(function() {
+                    //Live Chat Quote Assistance Button in DEV/QA/UAT
+                    liveagent.showWhenOnline('57336000000PZd8', document.getElementById('liveagent_button_online_57336000000PZd8'));
+                    liveagent.showWhenOffline('57336000000PZd8', document.getElementById('liveagent_button_offline_57336000000PZd8'));
+                    //live Chat General Inquiry Button in DEV/QA/UAT
+                    liveagent.showWhenOnline('57336000000Tqcv', document.getElementById('liveagent_button_online_57336000000Tqcv'));
+                    liveagent.showWhenOffline('57336000000Tqcv', document.getElementById('liveagent_button_offline_57336000000Tqcv'));
+                    //Live Chat Claim Button in DEV/QA/UAT
+                    liveagent.showWhenOnline('57336000000Tqcq', document.getElementById('liveagent_button_online_57336000000Tqcq'));
+                    liveagent.showWhenOffline('57336000000Tqcq', document.getElementById('liveagent_button_offline_57336000000Tqcq'));
+                });
+        }
+        else{
+            document.getElementsByClassName('aha-online')[0].className = "aha-online hide";
+            document.getElementsByClassName('aha-offline')[0].className = "aha-offline";
+        }
+    }
+    </script>
+    <style>
+        @font-face { font-family: 'Helvetica Neue'; src: url("assets/fonts/HelveticaNeue.eot"); /* IE9 Compat Modes */ src: url("assets/fonts/HelveticaNeue.eot?#iefix") format("embedded-opentype"), url("assets/fonts/HelveticaNeue.woff") format("woff"), url("assets/fonts/HelveticaNeue.ttf") format("truetype"), url("assets/fonts/HelveticaNeue.svg#a68121ef2e891aed38ff01110987f27a") format("svg"); /* Legacy iOS */ font-style: normal; font-weight: 400; }
+        @font-face { font-family: 'Helvetica Neue Medium'; src: url("assets/fonts/HelveticaNeue-Medium.eot"); /* IE9 Compat Modes */ src: url("assets/fonts/HelveticaNeue-Medium.eot?#iefix") format("embedded-opentype"), url("assets/fonts/HelveticaNeue-Medium.woff") format("woff"), url("assets/fonts/HelveticaNeue-Medium.ttf") format("truetype"), url("assets/fonts/HelveticaNeue-Medium.svg#d7af0fd9278f330eed98b60dddea7bd6") format("svg"); /* Legacy iOS */ font-style: normal; font-weight: 500; }
+        body{
+            font-family: 'Helvetica Neue';
+            margin: 0;
+        }
+        h1{
+            font-family: 'Helvetica Neue Medium';
+            font-size: 16px;
+            color: #333;
+            margin-top: 0;
+        }
+        .chat-item{
+            position: relative;
+            padding: 15px;
+            border-top: 1px solid #ccc;
+            transition: all 0.2s ease;
+        }
+        .chat-item:last-of-type{
+            border-bottom: 1px solid #ccc;
+        }
+        .chat-item:hover{
+            background: #ebeef0;
+            padding-top: 22px;
+            padding-bottom: 22px;
+        }
+        .chat-item:hover a{
+            background: #c100c1;
+            color: white;
+        }
+        a{
+            display: block;
+            border: 1px solid #ccc;
+            padding: 16px;
+            border: 2px solid #c100c1;
+            color: #c100c1;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            border-radius: 30px;
+            text-decoration: none;
+        }
+        .logo{
+            display: block;
+            margin: 25px auto;
+            width: 100%;
+            text-align: center;
+        }
+        .offline-message p{
+            font-size: 18px;
+            line-height: 23px;
+            color: black;
+            border: 1px solid #afadad;
+            background: #fbfbfb;
+            border-radius: 10px;
+            margin: 20px;
+            padding: 20px;
+            box-shadow: 1px 1px 10px rgba(0,0,0,0.05);
+            text-shadow: 1px 1px #fff;
+        }
+        .hide{
+            display: none !important;
+        }
+    </style>
     </head>
     <body>
+	    
+<div id="liveagent_invite_button_5734C00000000Cg" style="display:none;position: fixed; border: 2px solid darkblue; border-radius: 5px;background-color: lightblue; height: 100px; width: 200px;">
+    <div style="cursor: pointer; padding: 5px; right: 0px;position: absolute; color: darkred; font-weight: bold;"onclick="liveagent.rejectChat('5734C00000000Cg')">X</div>
+    <div style="cursor: pointer; top: 42px; left: 65px; position: absolute;font-weight: bold; font-size: 16px;" onclick="liveagent.startChat('5734C00000000Cg')">Start Chat</div>
+</div>
+<div class="aha-online">
+    <div class="logo"><img src="assets/images/logo-ignite.png" alt="aha Insurance"></div>
+    <div class="chat-item">
+        <h1>Quote Assistance</h1>
+        <a id="liveagent_button_online_57336000000PZd8" href="javascript://Chat" style="display: none;" onclick="liveagent.startChatWithWindow('57336000000PZd8', 'liveChatWindow')">Quote Assistance - Start Chat</a>
+        <div id="liveagent_button_offline_57336000000PZd8" style="display: none;">Quote Assistance - Offline</div>
+    </div>
+
+    <div class="chat-item">
+        <h1>General Inquiry</h1>
+        <a id="liveagent_button_online_57336000000Tqcv" href="javascript://Chat" style="display: none;" onclick="liveagent.startChatWithWindow('57336000000Tqcv', 'liveChatWindow')">General Inquiry - Start Chat</a>
+        <div id="liveagent_button_offline_57336000000Tqcv" style="display: none;">General Inquiry - Offline</div>
+    </div>
+
+    <div class="chat-item">
+        <h1>Claim</h1>
+        <a id="liveagent_button_online_57336000000Tqcq" href="javascript://Chat" style="display: none;" onclick="liveagent.startChatWithWindow('57336000000Tqcq', 'liveChatWindow')">Claim - Start Chat</a>
+        <div id="liveagent_button_offline_57336000000Tqcq" style="display: none;">Claim - Offline</div>
+    </div>
+</div>
+<div class="aha-offline hide">
+    <div class="logo"><img src="assets/images/logo-ignite.png" alt="aha Insurance"></div>
+    <div class="offline-message">
+        <p>Thanks for trying to reach us... we need our beauty sleep actually... some of us really need it and have left for the day. We're here to serve you Monday to Friday from 8:30 to 5. Sorry we missed you.</p>
+    </div>
+</div>
+
 	
     	<header>
 		
